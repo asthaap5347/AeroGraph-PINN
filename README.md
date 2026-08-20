@@ -1,8 +1,4 @@
-The tree structure box fixed the layout, but the code block wasn't closed after `requirements.txt`, trapping **Quickstart** inside the gray box.
 
-Replace the entire contents of **`README.md`** in VS Code with this clean version to close that block properly:
-
-```markdown
 # AeroGraph-PINN: Physics-Informed Neural Networks for Spatio-Temporal Atmospheric Pollution Modeling
 
 AeroGraph-PINN leverages Physics-Informed Neural Networks (PINNs) to reconstruct and forecast 2D spatio-temporal atmospheric pollutant dispersion from ultra-sparse physical sensor networks. By embedding 2D Advection-Diffusion partial differential equations (PDEs) directly into the neural loss function, the model accurately interpolates pollutant concentrations across unmonitored spatial domains without overfitting.
@@ -105,11 +101,3 @@ python scripts/evaluate.py
 ```
 
 ---
-
-### Update GitHub
-
-1. Save **`README.md`** in VS Code.
-2. Open **GitHub Desktop**, type `Fix README code block closing tags` in the summary box.
-3. Click **Commit to main** $\rightarrow$ **Push origin**.
-
-```
