@@ -1,7 +1,13 @@
+The tree structure box fixed the layout, but the code block wasn't closed after `requirements.txt`, trapping **Quickstart** inside the gray box.
+
+Replace the entire contents of **`README.md`** in VS Code with this clean version to close that block properly:
+
+```markdown
 # AeroGraph-PINN: Physics-Informed Neural Networks for Spatio-Temporal Atmospheric Pollution Modeling
 
 AeroGraph-PINN leverages Physics-Informed Neural Networks (PINNs) to reconstruct and forecast 2D spatio-temporal atmospheric pollutant dispersion from ultra-sparse physical sensor networks. By embedding 2D Advection-Diffusion partial differential equations (PDEs) directly into the neural loss function, the model accurately interpolates pollutant concentrations across unmonitored spatial domains without overfitting.
 
+---
 
 ## Key Performance Benchmarks
 
@@ -14,6 +20,7 @@ Evaluated across a $50,000$ spatial-temporal point domain using only **200 spars
 
 *The PINN architecture achieves a **40.8% reduction in MSE** and superior physical fidelity in unmonitored domain gaps.*
 
+---
 
 ## Governing Equations
 
@@ -26,10 +33,7 @@ Where:
 * $D$: Atmospheric diffusion coefficient ($D = 0.05$)
 * $C(x, y, t)$: Pollutant concentration field
 
-The network minimizes a multi-objective loss function:
-
-$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda_{\text{pde}} \mathcal{L}_{\text{pde}}$$
-
+---
 
 ## Visual Comparison
 
@@ -39,6 +43,7 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda_{\text{pde}} 
 * **Baseline NN:** Shows unphysical artifacts and magnitude overestimation ($>4.0$) in sparse zones.
 * **PINN Model:** Accurately constrains concentration peak ($2.5$) and spatial boundary profiles.
 
+---
 
 ## Repository Structure
 
@@ -61,25 +66,50 @@ AeroGraph-PINN/
 ├── pollution_map.png             # Initial dataset visualization
 └── requirements.txt              # Environment dependencies
 
+```
+
+---
+
 ## Quickstart
 
 1. **Clone the repository:**
+```bash
 git clone [https://github.com/asthaap5347/AeroGraph-PINN.git](https://github.com/asthaap5347/AeroGraph-PINN.git)
 cd AeroGraph-PINN
 
+```
+
+
 2. **Install dependencies:**
+```bash
 pip install -r requirements.txt
 
+```
+
+
 3. **Train models:**
+```bash
 python scripts/train.py
 
+```
+
+
 4. **Evaluate performance and plot results:**
+```bash
 python scripts/evaluate.py
 
+```
 
-### How to Update
 
-1. Open **`README.md`** in VS Code and paste the text above.
-2. Open **GitHub Desktop**, type `Update README with research metrics and equations` in the summary box, and click **Commit to main** $\rightarrow$ **Push origin**.
+
+```
+
+---
+
+### Update GitHub
+
+1. Save **`README.md`** in VS Code.
+2. Open **GitHub Desktop**, type `Fix README code block closing tags` in the summary box.
+3. Click **Commit to main** $\rightarrow$ **Push origin**.
 
 ```
