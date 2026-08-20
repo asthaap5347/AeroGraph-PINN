@@ -1,64 +1,86 @@
 \documentclass[conference]{IEEEtran}
-\usepackage{cite}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{graphicx}
 
-\begin{document}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
 
 \title{AeroGraph-PINN: Physics-Informed Neural Networks for Spatio-Temporal Atmospheric Pollution Modeling}
 
 \author{
-\IEEEauthorblockN{Astha Patel}
-\IEEEauthorblockA{\textit{Department of Computer Engineering} \\
-Gandhinagar, India}
+\IEEEauthorblockN{Astha Ajitkumar Patel}
+\IEEEauthorblockA{\textit{Project Repository:} \url{https://github.com/asthaap5347/AeroGraph-PINN}}
 }
+
+\begin{document}
 
 \maketitle
 
 \begin{abstract}
-Accurate spatial-temporal forecasting of atmospheric pollutant dispersion is often constrained by sparse physical monitoring stations. Standard deep learning architectures frequently produce unphysical boundary predictions when extrapolating into unmonitored spatial gaps. In this work, we propose AeroGraph-PINN, a Physics-Informed Neural Network architecture that integrates the 2D Advection-Diffusion Partial Differential Equation (PDE) directly into the neural loss function. Evaluated across a 50,000 point spatio-temporal domain using only 200 sparse sensor observations, AeroGraph-PINN achieves a Mean Squared Error (MSE) of 0.0315 and an $R^2$ score of 0.9274, representing a 40.8\% reduction in MSE compared to purely data-driven baselines.
+Predicting air pollution accurately is vital because pollution directly impacts human health. However, generating reliable pollution maps is difficult when physical monitoring stations are limited. A standard deep learning model learns strictly from observed data, often producing unrealistic predictions in unmonitored spatial gaps. In this work, I propose AeroGraph-PINN, a Physics-Informed Neural Network that combines deep learning with the 2D Advection-Diffusion Partial Differential Equation (PDE). Evaluated on a synthetic 50,000-point spatio-temporal domain using 200 sparse sensor observations and 2,000 collocation points, AeroGraph-PINN achieves an MSE of 0.0315 and an $R^2$ score of 0.9274, outperforming purely data-driven baselines.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Physics-Informed Neural Networks, Atmospheric Modeling, Advection-Diffusion Equation, Deep Learning.
+Physics-Informed Neural Networks, Atmospheric Pollution, Advection-Diffusion Equation, Deep Learning
 \end{IEEEkeywords}
 
 \section{Introduction}
-Atmospheric pollution modeling requires solving non-linear transport dynamics across complex spatial domains. Traditional numerical PDE solvers require dense grid discretizations and precise boundary conditions, whereas purely data-driven neural networks lack physical constraints and overfit sparse observation points. AeroGraph-PINN bridges this gap by enforcing conservation laws during network optimization.
+Air pollution is a pressing challenge because wind and diffusion continuously transport pollutants across space and time. Predicting pollution levels in regions without physical sensors allows us to map air quality comprehensively without relying on expensive infrastructure.
+
+Traditional numerical methods solve governing transport equations accurately but require high computational overhead. Conversely, standard deep learning models learn fast but produce unphysical artifacts when observations are sparse. AeroGraph-PINN bridges this gap by enforcing the 2D Advection-Diffusion physical law directly during network training.
 
 \section{Methodology}
+
 \subsection{Governing PDE}
-The atmospheric concentration field $C(x, y, t)$ is modeled using the 2D Advection-Diffusion equation:
+The pollutant concentration $C(x,y,t)$ is governed by the 2D Advection-Diffusion equation:
 \begin{equation}
-\frac{\partial C}{\partial t} + u \frac{\partial C}{\partial x} + v \frac{\partial C}{\partial y} = D \left( \frac{\partial^2 C}{\partial x^2} + \frac{\partial^2 C}{\partial y^2} \right)
+\frac{\partial C}{\partial t} + u\frac{\partial C}{\partial x} + v\frac{\partial C}{\partial y} = D\left(\frac{\partial^2 C}{\partial x^2} + \frac{\partial^2 C}{\partial y^2}\right)
 \end{equation}
-where $u = 0.5 \text{ km/h}$ and $v = 0.3 \text{ km/h}$ represent wind velocity components, and $D = 0.05$ is the diffusion coefficient.
+where $u = 0.5~\mathrm{km/h}$, $v = 0.3~\mathrm{km/h}$, and $D = 0.05$.
 
 \subsection{Loss Function Optimization}
-The total loss function $\mathcal{L}_{\text{total}}$ combines sensor observation error $\mathcal{L}_{\text{data}}$ with physics residual penalties $\mathcal{L}_{\text{pde}}$:
+The total loss combines observation error ($\mathcal{L}_{data}$) and physics residual error ($\mathcal{L}_{pde}$):
 \begin{equation}
-\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \mathcal{L}_{\text{pde}}
+\mathcal{L}_{total} = \mathcal{L}_{data} + \lambda\mathcal{L}_{pde}
 \end{equation}
-where $\lambda = 0.1$ balances the residual physics constraint evaluated across 2,000 collocation points.
+with physics weight $\lambda = 0.1$. Derivatives were computed across 2,000 collocation points using PyTorch automatic differentiation (\texttt{torch.autograd}). I trained and evaluated the model locally on my MacBook.
 
-\section{Experimental Results}
-Evaluation across the full domain demonstrates the significant advantage of physical regularization:
+\section{Experimental Results and Discussion}
+The models were evaluated across 50,000 spatio-temporal domain points over 1,000 training iterations.
 
 \begin{table}[htbp]
 \caption{Model Evaluation Across 50,000 Domain Points}
-\begin{center}
-\begin{tabular}{|l|c|c|}
-\hline
+\centering
+\begin{tabular}{lcc}
+\toprule
 \textbf{Model Architecture} & \textbf{MSE} & \textbf{$R^2$ Score} \\
-\hline
+\midrule
 Baseline Neural Network & 0.053317 & 0.8772 \\
 \textbf{AeroGraph-PINN (Ours)} & \textbf{0.031533} & \textbf{0.9274} \\
-\hline
+\bottomrule
 \end{tabular}
-\end{center}
+\label{tab:results}
 \end{table}
 
-\section{Conclusion}
-AeroGraph-PINN proves that embedding partial differential equations into deep neural networks significantly improves reconstruction fidelity for atmospheric pollution fields while using minimal sensor infrastructure.
+AeroGraph-PINN achieved a 40.8\% reduction in MSE compared to the baseline model. As shown in Fig.~\ref{fig:comparison}, the baseline network creates false peaks above 4.0 in unmonitored zones, whereas AeroGraph-PINN restricts peak values around 2.5, matching true physical dynamics.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\linewidth]{comparison_results.png}
+\caption{Visual comparison of Ground Truth, Baseline NN, and PINN predictions.}
+\label{fig:comparison}
+\end{figure}
+
+\section{Conclusion and Future Work}
+In this work, I developed AeroGraph-PINN to show that embedding physical laws into neural networks prevents unphysical predictions in sparse sensing environments. Future work will extend this framework to real-world air-quality sensor feeds and 3D atmospheric layers.
+
+\begin{thebibliography}{00}
+\bibitem{b1}
+M. Raissi, P. Perdikaris, and G. E. Karniadakis, ``Physics-informed neural networks,'' \textit{J. Comput. Phys.}, vol. 378, pp. 686--707, 2019.
+\bibitem{b2}
+A. Paszke et al., ``PyTorch: An imperative style, high-performance deep learning library,'' in \textit{NeurIPS}, 2019.
+\end{thebibliography}
 
 \end{document}
