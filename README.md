@@ -42,12 +42,15 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda_{\text{pde}} 
 
 ## Repository Structure
 
+```text
 AeroGraph-PINN/
 ├── data/
 │   └── pollution_dataset.csv     # Synthetic ground truth spatio-temporal grid
 ├── models/
 │   ├── baseline_model.pt         # Saved standard MLP weights
 │   └── pinn_model.pt             # Saved PINN weights
+├── paper/
+│   └── main.tex                  # Formal IEEE research manuscript
 ├── scripts/
 │   ├── model.py                  # PyTorch PollutionPINN model class
 │   ├── generate_data.py          # Advection-diffusion analytical solver
@@ -57,7 +60,6 @@ AeroGraph-PINN/
 ├── comparison_results.png        # Benchmark comparison visualization
 ├── pollution_map.png             # Initial dataset visualization
 └── requirements.txt              # Environment dependencies
-
 
 ## Quickstart
 
